@@ -59,7 +59,9 @@ classify:
     sw a0, 0(sp)
     sw a1, 4(sp)
     sw a2, 8(sp)
+
     
+
     li a0, 4
     jal malloc # malloc 4 bytes for an integer, rows
     beq a0, x0, error_malloc
@@ -77,7 +79,7 @@ classify:
     mv a2, s4 # set argument 3 for the read_matrix function
     
     jal read_matrix
-    
+
     mv s0, a0 # setting s0 to the m0, aka the return value of read_matrix
     
     lw a0, 0(sp)
@@ -166,12 +168,21 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    
+    li a0, 0
+Loop1:
+    add a0, a0, t1
+    addi t0, t0, -1
+    bne t0, x0, Loop1
+    # mul a0, t0, t1 
+    # t0, t1 >= 0
+    # FIXME: Replace 'mul' with your own implementation
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
     mv s9, a0 # move h to s9
-    
+
     mv a6, a0 # h 
     
     mv a0, s0 # move m0 array to first arg
@@ -203,9 +214,17 @@ classify:
     mv a0, s9 # move h to the first argument
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a1, t0, t1 # length of h array and set it as second argument
+
+    li a1, 0
+Loop2:
+    add a1, a1, t1
+    addi t0, t0, -1
+    bne t0, x0, Loop2
+    # mul a1, t0, t1 
+    # t0, t1 >= 0
+    # length of h array and set it as second argument
     # FIXME: Replace 'mul' with your own implementation
-    
+
     jal relu
     
     lw a0, 0(sp)
@@ -226,7 +245,16 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s6)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+
+    li a0, 0
+ Loop3:
+    add a0, a0, t1
+    addi t0, t0, -1
+    bne t0, x0, Loop3
+    # mul a0, t0, t1 
+    # t0, t1 >= 0
+    # FIXME: Replace 'mul' with your own implementation
+
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -241,9 +269,11 @@ classify:
     mv a3, s9 # move h array to fourth arg
     lw a4, 0(s3) # move h rows to fifth arg
     lw a5, 0(s8) # move h cols to sixth arg
-    
+
     jal matmul
     
+    
+
     lw a0, 0(sp)
     lw a1, 4(sp)
     lw a2, 8(sp)
@@ -262,10 +292,10 @@ classify:
     sw a2, 8(sp)
     sw a3, 12(sp)
     
-    lw a0, 16(a1) # load filename string into first arg
-    mv a1, s10 # load array into second arg
-    lw a2, 0(s5) # load number of rows into fourth arg
-    lw a3, 0(s8) # load number of cols into third arg
+    lw a0, 16(a1)   # load filename string into first arg
+    mv a1, s10      # load array into second arg
+    lw a2, 0(s5)    # load number of rows into fourth arg
+    lw a3, 0(s8)    # load number of cols into third arg
     
     jal write_matrix
     
@@ -286,7 +316,17 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    mul a1, t0, t1 # load length of array into second arg
+
+
+    li a1, 0
+Loop4:
+    add a1, a1, t1
+    addi t0, t0, -1
+    bne t0, x0, Loop4
+
+    # mul a1, t0, t1 
+    # load length of array into second arg
+    # t0, t1 >= 0
     # FIXME: Replace 'mul' with your own implementation
     
     jal argmax
@@ -300,7 +340,7 @@ classify:
     addi sp, sp 12
     
     mv a0, t0
-
+    
     # If enabled, print argmax(o) and newline
     bne a2, x0, epilouge
     

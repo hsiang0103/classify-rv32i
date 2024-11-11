@@ -74,10 +74,17 @@ read_matrix:
     sw t1, 0(s3)     # saves num rows
     sw t2, 0(s4)     # saves num cols
 
+########################################################
+    li s1, 0
+Loop:
+    add s1, s1, t2
+    addi t1, t1, -1
+    bne t1, x0, Loop
+########################################################
     # mul s1, t1, t2   # s1 is number of elements
     # FIXME: Replace 'mul' with your own implementation
 
-    slli t3, s1, 2
+    slli t3, s1, 2   # t3 = number of elements * 4
     sw t3, 24(sp)    # size in bytes
 
     lw a0, 24(sp)    # a0 = size in bytes

@@ -61,6 +61,14 @@ write_matrix:
     li t0, 2
     bne a0, t0, fwrite_error
 
+
+########################################################
+    li s4, 0
+Loop:
+    add s4, s4, s3
+    addi s2, s2, -1
+    bne s2, x0, Loop
+########################################################
     # mul s4, s2, s3   # s4 = total elements
     # FIXME: Replace 'mul' with your own implementation
 

@@ -23,12 +23,26 @@
 #   Result: [ 0, 0, 3,  0, 5]
 # ==============================================================================
 relu:
+    # Prologue
     li t0, 1             
     blt a1, t0, error     
-    li t1, 0             
-
+    li t1, 0            # counter
+# TODO: Add your own implementation
 loop_start:
-    # TODO: Add your own implementation
+    beq t1, a1, loop_end
+    lw t2, 0(a0)        # t2 = number
+    bge t2, x0, next
+less_than_zero:
+    li t2, 0
+next:
+    sw t2, 0(a0)    
+    addi a0, a0, 4
+    addi t1, t1, 1
+    j loop_start
+    
+loop_end:
+    # Epilogue
+    jr ra
 
 error:
     li a0, 36          

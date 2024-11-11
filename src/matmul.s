@@ -45,7 +45,6 @@ matmul:
     # Prologue
     addi sp, sp, -28
     sw ra, 0(sp)
-    
     sw s0, 4(sp)
     sw s1, 8(sp)
     sw s2, 12(sp)
@@ -56,9 +55,11 @@ matmul:
     li s0, 0 # outer loop counter
     li s1, 0 # inner loop counter
     mv s2, a6 # incrementing result matrix pointer
-    mv s3, a0 # incrementing matrix A pointer, increments durring outer loop
+    mv s3, a0 # incrementing matrix A pointer, increments during outer loop
     mv s4, a3 # incrementing matrix B pointer, increments during inner loop 
-    
+
+    slli s5, a2, 2
+
 outer_loop_start:
     #s0 is going to be the loop counter for the rows in A
     li s1, 0
@@ -116,6 +117,22 @@ inner_loop_start:
     
 inner_loop_end:
     # TODO: Add your own implementation
+    add s3, s3, s5
+    addi s0, s0, 1
+    j outer_loop_start
+
+
+outer_loop_end:
+    # Epilogue
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    lw s2, 12(sp)
+    lw s3, 16(sp)
+    lw s4, 20(sp)
+    lw s5, 24(sp)
+    addi sp, sp, 28
+    jr ra
 
 error:
     li a0, 38

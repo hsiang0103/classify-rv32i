@@ -20,9 +20,10 @@ abs:
     # Load number from memory
     lw t0 0(a0)
     bge t0, zero, done
-
     # TODO: Add your own implementation
-
+    sub t0, x0, t0
+    
 done:
+    sw t0 0(a0)
     # Epilogue
     jr ra
