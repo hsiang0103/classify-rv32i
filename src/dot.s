@@ -41,26 +41,26 @@ dot:
     blt a3, t0, error_terminate   
     blt a4, t0, error_terminate  
 
+    li t0, 0        # output        
+    li t1, 0        # counter of Number of elements to process
+
     mv s0, a0       # Pointer to first input array
     mv s1, a1       # Pointer to second input array
     mv s2, a2       # Number of elements to process
-    li t0, 0        # output        
-    li t1, 0        # counter of Number of elements to process
     slli s3, a3, 2  # s3 = stride0 * 4
     slli s4, a4, 2  # s4 = stride1 * 4
 
 loop_start:
-    bge t1, a2, loop_end
-    # TODO: Add your own implementation
+    bge t1, s2, loop_end
     lw t2, 0(s0)
     lw t3, 0(s1)
 
+mul:
     li t4, 0            # t4 = t2 * t3
     xor t5, t2, t3  
     srli t5, t5, 31     # t5 = sign
     bge t2, zero, next1
     sub t2, x0, t2
-    
 next1:
     bge t3, zero, mul_loop
     sub t3, x0, t3
@@ -72,15 +72,16 @@ mul_loop:
 next2:
     beq t5, x0, out
     sub t4, x0, t4
+
 out:
     add t0, t0, t4
     addi t1, t1, 1
     add s0, s0, s3
     add s1, s1, s4
     j loop_start
+
 loop_end:
     mv a0, t0
-
     # Epilogue
     lw ra, 0(sp)
     lw s0, 4(sp)

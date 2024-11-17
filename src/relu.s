@@ -24,24 +24,32 @@
 # ==============================================================================
 relu:
     # Prologue
+
+    addi sp, sp, -8
+    sw ra, 0(sp)
+    sw s0, 4(sp)
+
     li t0, 1             
     blt a1, t0, error     
     li t1, 0            # counter
+    mv s0, a0
 # TODO: Add your own implementation
 loop_start:
     beq t1, a1, loop_end
-    lw t2, 0(a0)        # t2 = number
+    lw t2, 0(s0)        # t2 = number
     bge t2, x0, next
 less_than_zero:
-    li t2, 0
+    sw x0, 0(s0)    
 next:
-    sw t2, 0(a0)    
-    addi a0, a0, 4
+    addi s0, s0, 4
     addi t1, t1, 1
     j loop_start
     
 loop_end:
     # Epilogue
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    addi sp, sp, 8
     jr ra
 
 error:
